@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Теория цвета — Искусство и логика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════════
+   ПЕРЕМЕННЫЕ — меняй здесь чтобы изменить тему сайта
+   ═══════════════════════════════════════════════════════ */
+:root{
+  --bg:#07070d;
+  --bg2:#0e0e18;
+  --surface:#12121f;
+  --surface2:#191928;
+  --surface3:#1f1f32;
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.12);
+  --text:#eeeef5;
+  --muted:rgba(238,238,245,0.42);
+  --muted2:rgba(238,238,245,0.22);
+  --accent:#e8c547;
+  --accent2:#f0d060;
+  --r:14px;
+  --r2:20px;
+  --tr:.38s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.035'/%3E%3C/svg%3E");opacity:.6}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+
+/* ── НАВИГАЦИЯ ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:64px;backdrop-filter:blur(24px) saturate(180%);background:rgba(7,7,13,0.85);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);text-decoration:none}
+.nav-logo-dot{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:conic-gradient(#ff4d4d,#ff8c42,#ffe066,#7fde7f,#47b8e0,#6a5acd,#ff4d4d);animation:spinSlow 12s linear infinite}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+.nav-links{display:flex;gap:4px}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:100px;transition:color .3s,background .3s}
+.nav-links a:hover{color:var(--text);background:var(--surface2)}
+.nav-pill{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:7px 18px;border-radius:100px;text-decoration:none;transition:opacity .3s,transform .3s}
+.nav-pill:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── УТИЛИТЫ ── */
+section{position:relative;z-index:1}
+.container{max-width:1160px;margin:0 auto;padding:0 28px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:.63rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);background:rgba(232,197,71,.1);padding:5px 14px;border-radius:100px;border:1px solid rgba(232,197,71,.2);margin-bottom:18px}
+.chip::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
+h2.st{font-size:clamp(1.9rem,4vw,3.2rem);font-weight:900;line-height:1.05;letter-spacing:-.02em;margin-bottom:16px}
+.sd{color:var(--muted);font-size:.94rem;max-width:560px;line-height:1.75}
+.fi{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease}
+.fi.v{opacity:1;transform:translateY(0)}
+.fi.d1{transition-delay:.08s}.fi.d2{transition-delay:.16s}.fi.d3{transition-delay:.24s}
+
+/* ════════════════════════════════════
+   HERO
+   ════════════════════════════════════ */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:60px;padding:120px 0 80px;overflow:hidden}
+.hero-left{position:relative;z-index:2;padding:0 28px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-size:clamp(3.2rem,7vw,6rem);font-weight:900;line-height:.93;letter-spacing:-.035em;margin-bottom:32px}
+.hero-title .l1,.hero-title .l3{display:block;color:var(--text)}
+.hero-title .l2{display:block;background:conic-gradient(from 0deg,#ff4d4d 0%,#ff8c42 14%,#ffe066 28%,#a8d400 42%,#30d158 56%,#47b8e0 70%,#6a5acd 84%,#ff4d4d 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 100%;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:440px;line-height:1.8;margin-bottom:40px;font-weight:300}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.btn-gold{display:inline-flex;align-items:center;gap:10px;padding:14px 30px;background:var(--accent);color:#07070d;font-family:'Montserrat',sans-serif;font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;border:none;border-radius:100px;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent)}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(232,197,71,.4)}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;padding:14px 30px;background:transparent;color:var(--text);font-family:'Montserrat',sans-serif;font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border2);border-radius:100px;cursor:pointer;text-decoration:none;transition:background .3s,transform .3s}
+.btn-ghost:hover{background:var(--surface2);transform:translateY(-3px)}
+.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hfact{padding:20px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);transition:border-color .3s}
+.hfact:hover{border-color:var(--border2)}
+.hfact-num{font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hfact-label{font-size:.7rem;color:var(--muted);font-weight:500}
+/* Правая часть hero */
+.hero-right{position:relative;display:flex;justify-content:center;align-items:center;height:520px}
+.hring{position:absolute;border-radius:50%}
+.hring1{width:480px;height:480px;background:conic-gradient(#ff4d4d,#ff8c42,#ffe066,#a8d400,#30d158,#47b8e0,#6a5acd,#d966b2,#ff4d4d);filter:blur(55px);opacity:.2;animation:orb 9s ease-in-out infinite}
+.hring2{width:320px;height:320px;background:conic-gradient(#6a5acd,#47b8e0,#30d158,#ffe066,#ff4d4d,#6a5acd);filter:blur(36px);opacity:.18;animation:orb 9s ease-in-out infinite;animation-delay:-3s;animation-direction:reverse}
+.hring3{width:180px;height:180px;background:radial-gradient(circle,var(--accent),transparent 70%);filter:blur(22px);opacity:.28;animation:orb 9s ease-in-out infinite;animation-delay:-1.5s}
+@keyframes orb{0%,100%{transform:scale(1) translateY(0)}33%{transform:scale(1.07) translateY(-14px)}66%{transform:scale(.95) translateY(9px)}}
+.hring-border{position:absolute;width:390px;height:390px;border-radius:50%;border:1px solid rgba(255,255,255,.06);animation:spinSlow 40s linear infinite}
+.hring-border::before{content:'';position:absolute;top:-5px;left:50%;margin-left:-5px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.hero-center{position:relative;z-index:2;text-align:center;padding:32px;background:rgba(7,7,13,.65);border-radius:50%;width:250px;height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--border);backdrop-filter:blur(12px)}
+.hero-center .big{font-size:3rem;margin-bottom:6px}
+.hero-center .sm{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+
+/* ════════════════════════════════════
+   ТЕОРИЯ
+   ════════════════════════════════════ */
+#theory{padding:100px 0;border-top:1px solid var(--border);background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)}
+.theory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px}
+.tcard{padding:30px 26px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);position:relative;overflow:hidden;transition:border-color .3s,transform .3s,box-shadow .3s}
+.tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.tcard:hover{border-color:var(--border2);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.tcard:hover::before{opacity:1}
+.tcard-icon{font-size:1.8rem;margin-bottom:18px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:12px;border:1px solid var(--border)}
+.tcard h3{font-size:1.05rem;font-weight:800;margin-bottom:10px}
+.tcard p{font-size:.82rem;color:var(--muted);line-height:1.7}
+.tcard-tag{display:inline-block;margin-top:14px;font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(232,197,71,.1);padding:4px 12px;border-radius:100px}
+/* Тайм-лайн */
+.tl-wrap{margin-top:60px}
+.tl-title{font-size:1.15rem;font-weight:800;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.tl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.tl-grid::before{content:'';position:absolute;top:20px;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--border2) 20%,var(--border2) 80%,transparent)}
+.tl-item{padding:42px 14px 0;position:relative}
+.tl-dot{position:absolute;top:12px;left:14px;width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(232,197,71,.2)}
+.tl-year{font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.1em;margin-bottom:6px}
+.tl-text{font-size:.77rem;color:var(--muted);line-height:1.55}
+.tl-text strong{color:var(--text);display:block;margin-bottom:3px}
+
+/* ── ТАЙМ-ЛАЙ­Н С ФОТО УЧЁНЫХ ── */
+.tl-photo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:14px}
+.tl-photo{width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid var(--border2);display:block;transition:filter .3s,transform .3s,border-color .3s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.tl-item:hover .tl-photo{transform:scale(1.07);border-color:var(--accent);box-shadow:0 6px 28px rgba(232,197,71,.35)}
+.tl-photo-line{width:1px;height:18px;background:linear-gradient(var(--accent),transparent);margin-top:4px}
+.tl-dot{display:none}
+
+/* ── КАРТОЧКИ ПСИХОЛОГИИ С ФОТО БРЕНДОВ ── */
+.pcard-brands-imgs{display:flex;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.brand-img-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:52px;max-width:66px}
+.brand-img{width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0;transition:transform .25s,box-shadow .25s;cursor:default}
+.brand-img svg{width:44px;height:44px;display:block}
+.brand-img:hover{transform:scale(1.12);box-shadow:0 4px 16px rgba(0,0,0,.35)}
+.brand-img-label{font-size:.58rem;color:var(--muted2);text-align:center;line-height:1.3;font-weight:600}
+
+/* ════════════════════════════════════
+   ЦВЕТОВОЙ КРУГ
+   ════════════════════════════════════ */
+#wheel{padding:100px 0;border-top:1px solid var(--border)}
+.wheel-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:52px}
+.wheel-wrap{display:flex;justify-content:center;align-items:center}
+#colorWheelSVG{width:100%;max-width:430px;cursor:pointer;filter:drop-shadow(0 0 60px rgba(255,255,255,.04))}
+.wheel-sector{transition:opacity .2s,filter .2s;cursor:pointer}
+.wheel-sector:hover{filter:brightness(1.3) saturate(1.2)}
+.wheel-sector.dimmed{opacity:.15}
+/* Панель */
+.cp-wrap{min-height:420px}
+.cp-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;color:var(--muted2);gap:14px}
+.cp-ph-icon{width:80px;height:80px;border-radius:50%;background:conic-gradient(#ff4d4d,#ff8c42,#ffe066,#30d158,#47b8e0,#6a5acd,#ff4d4d);display:flex;align-items:center;justify-content:center;font-size:1.9rem;animation:spinSlow 8s linear infinite}
+.cp-ph p{font-size:.82rem;line-height:1.7}
+.cp-det{display:none;flex-direction:column;gap:0}
+.cp-banner{height:130px;border-radius:var(--r2) var(--r2) 0 0;position:relative;overflow:hidden;transition:background var(--tr)}
+.cp-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%,rgba(0,0,0,.2) 100%)}
+.cp-bhex{position:absolute;bottom:12px;right:14px;z-index:2;font-size:.74rem;font-weight:700;letter-spacing:.12em;font-family:monospace;background:rgba(0,0,0,.42);color:#fff;padding:5px 12px;border-radius:100px;backdrop-filter:blur(8px)}
+.cp-body{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r2) var(--r2);padding:22px;display:flex;flex-direction:column;gap:18px}
+.cp-row1{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cp-name{font-size:1.9rem;font-weight:900;transition:color var(--tr);line-height:1}
+.cp-temp{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:100px;border:1px solid;flex-shrink:0}
+.cp-desc{font-size:.83rem;color:var(--muted);line-height:1.72}
+.cp-tags{display:flex;flex-wrap:wrap;gap:7px}
+.cp-tag{font-size:.7rem;font-weight:600;padding:5px 13px;border-radius:100px;border:1px solid;transition:background var(--tr);cursor:default}
+.cp-rgb{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cp-rgb-item{padding:10px;background:var(--surface2);border-radius:10px;text-align:center}
+.cp-rgb-bar{height:3px;border-radius:2px;margin-bottom:8px}
+.cp-rgb-val{font-size:.9rem;font-weight:800;line-height:1;margin-bottom:2px}
+.cp-rgb-ch{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)}
+.cp-uses{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;background:var(--surface2);border-radius:var(--r);font-size:.8rem}
+.cp-uses-icon{font-size:.95rem;flex-shrink:0;margin-top:1px}
+.cp-uses-text{color:var(--muted);line-height:1.6}
+.cp-uses-text strong{color:var(--text);display:block;margin-bottom:2px}
+.cp-comp{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border)}
+.cp-cs{display:flex}
+.cp-s{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.15);flex-shrink:0;transition:background var(--tr)}
+.cp-s2{margin-left:-8px}
+.cp-ci{flex:1}
+.cp-cl{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:3px}
+.cp-cn{font-size:.84rem;font-weight:700}
+
+/* ════════════════════════════════════
+   ГАРМОНИИ
+   ════════════════════════════════════ */
+#harmony{padding:100px 0;border-top:1px solid var(--border);background:var(--bg2)}
+.harmony-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:52px}
+.hbtns{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.hbtn{display:flex;align-items:center;gap:14px;padding:17px 19px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;text-align:left;transition:border-color .3s,background .3s,transform .3s;color:var(--text);font-family:'Montserrat',sans-serif}
+.hbtn:hover{background:var(--surface2);transform:translateX(5px)}
+.hbtn.on{border-color:var(--accent);background:rgba(232,197,71,.05)}
+.hbtn-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;background:var(--surface2);border:1px solid var(--border);transition:background .3s}
+.hbtn.on .hbtn-icon{background:rgba(232,197,71,.12)}
+.hbtn-body{flex:1}
+.hbtn-name{font-size:.88rem;font-weight:800;margin-bottom:2px}
+.hbtn-sub{font-size:.72rem;color:var(--muted)}
+.hbtn-arr{color:var(--muted2);transition:transform .3s,color .3s;font-size:1.1rem}
+.hbtn:hover .hbtn-arr,.hbtn.on .hbtn-arr{color:var(--accent);transform:translateX(3px)}
+.harmony-exp{padding:20px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);font-size:.82rem;color:var(--muted);line-height:1.75;display:none}
+.harmony-exp.v{display:block}
+.harmony-exp strong{color:var(--text)}
+.h-colors{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap}
+.hchip{display:flex;align-items:center;gap:7px;padding:6px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;font-size:.72rem;font-weight:600}
+.hcdot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+
+/* ════════════════════════════════════
+   ПСИХОЛОГИЯ
+   ════════════════════════════════════ */
+#psychology{padding:100px 0;border-top:1px solid var(--border)}
+.psych-intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:56px}
+.psych-quote{padding:30px;background:var(--surface);border-radius:var(--r2);border:1px solid var(--border);position:relative;overflow:hidden}
+.psych-quote::before{content:'"';position:absolute;top:-10px;left:16px;font-size:8rem;font-weight:900;line-height:1;color:var(--accent);opacity:.07;pointer-events:none}
+.psych-quote-text{font-size:.96rem;line-height:1.78;font-style:italic;font-weight:300;margin-bottom:16px}
+.psych-quote-author{font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.psych-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);background:var(--surface);transition:transform .35s,box-shadow .35s,border-color .35s;cursor:pointer}
+.pcard:hover{transform:translateY(-8px) scale(1.015);box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.pcard-top{height:110px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pcard-top::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.pcard-emoji{font-size:2.8rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));z-index:2}
+.pcard-body{padding:22px 20px}
+.pcard-name{font-size:1.2rem;font-weight:900;margin-bottom:2px}
+.pcard-tagline{font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+.pcard-desc{font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:13px}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:5px}
+.pcard-tag{font-size:.65rem;padding:3px 9px;background:rgba(255,255,255,.05);border-radius:100px;color:var(--muted);border:1px solid var(--border)}
+.pcard-brands{margin-top:11px;padding-top:11px;border-top:1px solid var(--border);font-size:.7rem;color:var(--muted2)}
+.pcard-brands span{color:var(--muted)}
+/* Факты */
+.pfacts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.pfact{padding:24px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);text-align:center;transition:border-color .3s,transform .3s}
+.pfact:hover{border-color:var(--border2);transform:translateY(-4px)}
+.pfact-num{font-size:2.5rem;font-weight:900;line-height:1;margin-bottom:6px;color:var(--accent)}
+.pfact-text{font-size:.73rem;color:var(--muted);line-height:1.5}
+
+/* ════════════════════════════════════
+   ПЕСОЧНИЦА
+   ════════════════════════════════════ */
+#sandbox{padding:100px 0;border-top:1px solid var(--border);background:var(--bg2)}
+.sandbox-layout{display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:start;margin-top:48px}
+.pal-label{font-size:.64rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:13px}
+.pals{display:flex;flex-direction:column;gap:9px}
+.pal{display:flex;align-items:center;gap:13px;padding:13px 15px;background:var(--surface);border:2px solid var(--border);border-radius:var(--r);cursor:pointer;transition:border-color .3s,transform .3s,background .3s}
+.pal:hover{transform:translateX(4px);background:var(--surface2)}
+.pal.on{border-color:var(--accent);background:rgba(232,197,71,.04)}
+.pal-sw{display:flex;gap:3px}
+.pal-s{width:19px;height:19px;border-radius:50%;border:1px solid rgba(255,255,255,.15)}
+.pal-info{flex:1}
+.pal-name{font-size:.81rem;font-weight:700;margin-bottom:1px}
+.pal-mood{font-size:.69rem;color:var(--muted)}
+.pal-chk{color:var(--accent);font-size:.95rem;opacity:0;transition:opacity .3s}
+.pal.on .pal-chk{opacity:1}
+/* Браузер */
+.browser{background:#f5f5f7;border-radius:16px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.55);transition:box-shadow .3s}
+.browser:hover{box-shadow:0 50px 140px rgba(0,0,0,.6)}
+.b-chrome{background:#e8e8ec;padding:10px 16px;display:flex;align-items:center;gap:14px}
+.b-dots{display:flex;gap:6px}
+.b-dot{width:11px;height:11px;border-radius:50%}
+.b-bar{flex:1;height:26px;background:#fff;border-radius:100px;display:flex;align-items:center;padding:0 12px;gap:6px;border:1px solid rgba(0,0,0,.1)}
+.b-lock{font-size:.63rem;color:#aaa}
+.b-url{font-size:.63rem;color:#888;font-family:monospace;flex:1}
+.mk-nav{padding:12px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.07);transition:background var(--tr)}
+.mk-logo{font-size:.8rem;font-weight:900;transition:color var(--tr)}
+.mk-nls{display:flex;gap:12px}
+.mk-nl{height:5px;border-radius:3px;opacity:.25;transition:background var(--tr);width:34px}
+.mk-hero{padding:30px 22px 22px;transition:background var(--tr)}
+.mk-chip{height:5px;width:58px;border-radius:3px;margin-bottom:11px;opacity:.4;transition:background var(--tr)}
+.mk-h1{font-size:1.25rem;font-weight:900;line-height:1.15;margin-bottom:10px;transition:color var(--tr)}
+.mk-lines{display:flex;flex-direction:column;gap:5px;margin-bottom:17px}
+.mk-line{height:4px;border-radius:3px;opacity:.2;transition:background var(--tr)}
+.mk-cta{display:inline-block;padding:9px 21px;border-radius:100px;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:background var(--tr),color var(--tr),box-shadow var(--tr)}
+.mk-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 22px 22px;transition:background var(--tr)}
+.mk-card{border-radius:9px;overflow:hidden}
+.mk-ct{height:48px;transition:background var(--tr)}
+.mk-cb{padding:9px;background:#fff}
+.mk-cl{height:4px;border-radius:2px;margin-bottom:4px;background:#e5e5e7}
+.mk-cl:last-child{width:60%}
+
+/* ════════════════════════════════════
+   ФУТЕР
+   ════════════════════════════════════ */
+footer{border-top:1px solid var(--border);padding:72px 0 48px;position:relative;z-index:1;background:var(--bg)}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:48px;margin-bottom:52px}
+.footer-brand{max-width:280px}
+.footer-logo{display:flex;align-items:center;gap:10px;font-size:.8rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.footer-logo-dot{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:conic-gradient(#ff4d4d,#ff8c42,#ffe066,#30d158,#47b8e0,#6a5acd,#ff4d4d)}
+.footer-brand p{font-size:.79rem;color:var(--muted);line-height:1.7}
+.footer-col h4{font-size:.7rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-col ul li{font-size:.79rem;color:var(--muted)}
+.footer-col ul li span{color:var(--text);font-weight:600}
+.footer-bottom{padding-top:28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-author{font-size:.78rem;color:var(--muted);line-height:1.7}
+.footer-author strong{color:var(--text);font-size:.86rem}
+.footer-author .gold{color:var(--accent);font-weight:700;font-size:.9rem}
+.footer-spectrum{display:flex;height:4px;border-radius:2px;overflow:hidden;gap:1px;width:200px}
+.footer-spectrum span{flex:1;border-radius:1px}
+
+/* ════════════════════════════════════
+   MEDIA QUERIES
+   ════════════════════════════════════ */
+@media(max-width:1024px){
+  #hero{grid-template-columns:1fr;padding-top:100px}
+  .hero-right{display:none}
+  .theory-grid{grid-template-columns:1fr 1fr}
+  .tl-grid{grid-template-columns:1fr 1fr;gap:20px}
+  .tl-grid::before{display:none}
+  .tl-item{padding-top:8px}
+  .tl-dot{display:none}
+  .psych-intro{grid-template-columns:1fr}
+  .pfacts{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:800px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .nav-pill{display:none}
+  .wheel-layout,.harmony-layout,.sandbox-layout{grid-template-columns:1fr;gap:40px}
+  .psych-grid{grid-template-columns:repeat(2,1fr)}
+  .theory-grid{grid-template-columns:1fr}
+  .sandbox-layout{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .psych-grid{grid-template-columns:1fr}
+  .hero-facts{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+  .pfacts{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- НАВИГАЦИЯ -->
+<nav>
+  <a class="nav-logo" href="#hero">
+    <div class="nav-logo-dot"></div>
+    Теория цвета
+  </a>
+  <div class="nav-links">
+    <a href="#theory">Теория</a>
+    <a href="#wheel">Круг</a>
+    <a href="#harmony">Гармонии</a>
+    <a href="#psychology">Психология</a>
+    <a href="#sandbox">Макет</a>
+  </div>
+  <a href="#wheel" class="nav-pill">Начать →</a>
+</nav>
+
+
+<!-- ══════════════════════════
+     HERO
+     ══════════════════════════ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Выпускной проект · 11 «Б» класс · 2026</div>
+    <h1 class="hero-title">
+      <span class="l1">Искусство</span>
+      <span class="l2">и логика</span>
+      <span class="l3">цвета</span>
+    </h1>
+    <p class="hero-sub">
+      Цвет — это <strong>язык без слов</strong>. Он влияет на настроение,
+      формирует доверие, вызывает желание действовать.
+      Исследуйте теорию цвета через живые интерактивные инструменты.
+    </p>
+    <div class="hero-btns">
+      <a href="#wheel" class="btn-gold">Начать исследование →</a>
+      <a href="#theory" class="btn-ghost">Читать теорию</a>
+    </div>
+    <div class="hero-facts">
+      <div class="hfact"><div class="hfact-num">12</div><div class="hfact-label">цветов в круге Иттена</div></div>
+      <div class="hfact"><div class="hfact-num">85%</div><div class="hfact-label">покупок определяет цвет</div></div>
+      <div class="hfact"><div class="hfact-num">0.09с</div><div class="hfact-label">первое впечатление о цвете</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hring hring1"></div>
+    <div class="hring hring2"></div>
+    <div class="hring hring3"></div>
+    <div class="hring-border"></div>
+    <div class="hero-center">
+      <div class="big">🎨</div>
+      <div class="sm">цветовой спектр</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════
+     ТЕОРИЯ
+     ══════════════════════════ -->
+<section id="theory">
+  <div class="container">
+    <div class="chip fi">Теоретическая часть</div>
+    <h2 class="st fi d1">Основы теории цвета</h2>
+    <p class="sd fi d2">Теория цвета — раздел науки и искусства, изучающий взаимодействие цветов, их восприятие глазом и применение в творчестве и дизайне.</p>
+
+    <div class="theory-grid">
+      <div class="tcard fi">
+        <div class="tcard-icon">🔴</div>
+        <h3>Первичные цвета</h3>
+        <p>Красный, жёлтый и синий — базовые цвета, которые невозможно получить смешением других. Они образуют вершины цветового треугольника Иттена.</p>
+        <span class="tcard-tag">Основа всего</span>
+      </div>
+      <div class="tcard fi d1">
+        <div class="tcard-icon">🟠</div>
+        <h3>Вторичные цвета</h3>
+        <p>Оранжевый, зелёный и фиолетовый — продукт смешения двух первичных. Оранжевый = красный + жёлтый. Зелёный = синий + жёлтый. Фиолетовый = красный + синий.</p>
+        <span class="tcard-tag">Смешение</span>
+      </div>
+      <div class="tcard fi d2">
+        <div class="tcard-icon">🎨</div>
+        <h3>Третичные цвета</h3>
+        <p>Шесть переходных оттенков между первичными и вторичными: красно-оранжевый, жёлто-оранжевый, жёлто-зелёный, сине-зелёный, сине-фиолетовый, красно-фиолетовый.</p>
+        <span class="tcard-tag">Переходные</span>
+      </div>
+      <div class="tcard fi">
+        <div class="tcard-icon">☀️</div>
+        <h3>Тёплые цвета</h3>
+        <p>Красные, оранжевые и жёлтые оттенки. Визуально «приближаются» к наблюдателю, создают ощущение динамики и энергии. Активируют симпатическую нервную систему.</p>
+        <span class="tcard-tag">Активные</span>
+      </div>
+      <div class="tcard fi d1">
+        <div class="tcard-icon">🌊</div>
+        <h3>Холодные цвета</h3>
+        <p>Синие, зелёные и фиолетовые оттенки. Создают ощущение дистанции и прохлады, успокаивают, снижают тревожность. Идеальны для медицины и технологий.</p>
+        <span class="tcard-tag">Успокаивающие</span>
+      </div>
+      <div class="tcard fi d2">
+        <div class="tcard-icon">⚖️</div>
+        <h3>Нейтральные цвета</h3>
+        <p>Белый, чёрный, серый и бежевый. Сами по себе не вызывают сильных эмоций, зато служат идеальным фоном для акцентных цветов и балансируют композицию.</p>
+        <span class="tcard-tag">Фоновые</span>
+      </div>
+    </div>
+
+    <!-- Исторический тайм-лайн с портретами учёных (SVG, работает без интернета) -->
+    <div class="tl-wrap fi" style="margin-top:60px">
+      <div class="tl-title">История изучения цвета</div>
+      <div class="tl-grid">
+
+        <div class="tl-item fi">
+          <div class="tl-photo-wrap">
+            <img class="tl-photo" src="data:image/jpeg;base64,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" alt="Исаак Ньютон" style="object-position:center top"/>
+            <div class="tl-photo-line"></div>
+          </div>
+          <div class="tl-year">1666</div>
+          <div class="tl-text"><strong>Исаак Ньютон</strong>Разложил белый свет через призму, открыв спектр из 7 цветов. Впервые доказал, что цвет — свойство света, а не предмета.</div>
+        </div>
+
+        <div class="tl-item fi d1">
+          <div class="tl-photo-wrap">
+            <img class="tl-photo" src="data:image/jpeg;base64,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" alt="Иоганн Гёте" style="object-position:center top"/>
+            <div class="tl-photo-line"></div>
+          </div>
+          <div class="tl-year">1810</div>
+          <div class="tl-text"><strong>Иоганн Гёте</strong>Опубликовал «Учение о цвете» — первое систематическое исследование психологии восприятия цвета человеком.</div>
+        </div>
+
+        <div class="tl-item fi d2">
+          <div class="tl-photo-wrap">
+            <img class="tl-photo" src="data:image/jpeg;base64,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" alt="Йоханнес Иттен" style="object-position:center top"/>
+            <div class="tl-photo-line"></div>
+          </div>
+          <div class="tl-year">1920</div>
+          <div class="tl-text"><strong>Йоханнес Иттен</strong>Разработал цветовой круг в школе Баухаус — главный инструмент теории цвета, используемый по сей день.</div>
+        </div>
+
+        <div class="tl-item fi d3">
+          <div class="tl-photo-wrap">
+            <img class="tl-photo" src="data:image/jpeg;base64,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" alt="Василий Кандинский" style="object-position:center top"/>
+            <div class="tl-photo-line"></div>
+          </div>
+          <div class="tl-year">1911</div>
+          <div class="tl-text"><strong>Василий Кандинский</strong>Опубликовал «О духовном в искусстве» — исследование эмоционального воздействия цвета на человека.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════
+     ЦВЕТОВОЙ КРУГ
+     ══════════════════════════ -->
+<section id="wheel">
+  <div class="container">
+    <div class="chip fi">Инструмент №1</div>
+    <h2 class="st fi d1">Цветовой круг Иттена</h2>
+    <p class="sd fi d2">Кликните на любой из 12 секторов — справа появятся подробные характеристики: HEX, RGB-компоненты, ассоциации, применение и комплементарный цвет.</p>
+
+    <div class="wheel-layout">
+      <div class="wheel-wrap fi">
+        <svg id="colorWheelSVG" viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <div class="cp-wrap fi d1">
+        <div class="cp-ph" id="cpPh">
+          <div class="cp-ph-icon">🎨</div>
+          <p>Нажмите на любой<br>сектор круга слева,<br>чтобы узнать о цвете всё</p>
+        </div>
+        <div class="cp-det" id="cpDet">
+          <div class="cp-banner" id="cpBanner">
+            <span class="cp-bhex" id="cpHex">#000000</span>
+          </div>
+          <div class="cp-body">
+            <div class="cp-row1">
+              <div class="cp-name" id="cpName">—</div>
+              <div class="cp-temp" id="cpTemp">—</div>
+            </div>
+            <div class="cp-desc" id="cpDesc">—</div>
+            <div class="cp-tags" id="cpTags"></div>
+            <div class="cp-rgb">
+              <div class="cp-rgb-item">
+                <div class="cp-rgb-bar" id="cpRbar" style="background:#ff4444;width:50%"></div>
+                <div class="cp-rgb-val" id="cpRv">—</div>
+                <div class="cp-rgb-ch">R</div>
+              </div>
+              <div class="cp-rgb-item">
+                <div class="cp-rgb-bar" id="cpGbar" style="background:#44ff44;width:50%"></div>
+                <div class="cp-rgb-val" id="cpGv">—</div>
+                <div class="cp-rgb-ch">G</div>
+              </div>
+              <div class="cp-rgb-item">
+                <div class="cp-rgb-bar" id="cpBbar" style="background:#4488ff;width:50%"></div>
+                <div class="cp-rgb-val" id="cpBv">—</div>
+                <div class="cp-rgb-ch">B</div>
+              </div>
+            </div>
+            <div class="cp-uses">
+              <div class="cp-uses-icon">💼</div>
+              <div class="cp-uses-text">
+                <strong>Где применяется</strong>
+                <span id="cpUses">—</span>
+              </div>
+            </div>
+            <div class="cp-comp">
+              <div class="cp-cs">
+                <div class="cp-s" id="cpS1"></div>
+                <div class="cp-s cp-s2" id="cpS2"></div>
+              </div>
+              <div class="cp-ci">
+                <div class="cp-cl">Комплементарный цвет</div>
+                <div class="cp-cn" id="cpCN">—</div>
+              </div>
+              <span style="font-family:monospace;font-size:.73rem;color:var(--muted)" id="cpCH">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════
+     ГАРМОНИИ
+     ══════════════════════════ -->
+<section id="harmony">
+  <div class="container">
+    <div class="chip fi">Инструмент №2</div>
+    <h2 class="st fi d1">Тренажёр цветовых гармоний</h2>
+    <p class="sd fi d2">Цветовая гармония — правило, по которому цвета красиво сочетаются. Выберите тип — на круге подсветятся нужные сектора с пояснением логики.</p>
+
+    <div class="harmony-layout">
+      <div>
+        <div class="hbtns fi" id="harmonyBtns"></div>
+        <div class="harmony-exp" id="harmonyExp"></div>
+        <div class="h-colors" id="harmonyColors"></div>
+      </div>
+      <div class="fi d1" style="display:flex;justify-content:center">
+        <svg id="harmonyWheelSVG" viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px"></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════
+     ПСИХОЛОГИЯ
+     ══════════════════════════ -->
+<section id="psychology">
+  <div class="container">
+    <div class="chip fi">Раздел №3</div>
+    <h2 class="st fi d1">Психология цвета</h2>
+    <p class="sd fi d2">Каждый цвет воздействует на психику и вызывает конкретные эмоции. Дизайнеры и маркетологи используют это намеренно.</p>
+
+    <div class="psych-intro">
+      <div class="psych-quote fi">
+        <p class="psych-quote-text">«Цвет — это клавиатура. Глаз — молоточек. Душа — рояль со многими струнами. Художник — рука, которая посредством клавиша целесообразно приводит душу в вибрацию.»</p>
+        <div class="psych-quote-author">— Василий Кандинский, 1911</div>
+      </div>
+      <div class="fi d1">
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.8;margin-bottom:22px">
+          Исследования показывают, что <strong style="color:var(--text)">цвет влияет на 60–80% решений о покупке</strong>.
+          Правильный выбор цвета для бренда увеличивает его узнаваемость до 80%.
+        </p>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.8;margin-bottom:22px">
+          Люди принимают подсознательное суждение о товаре за <strong style="color:var(--text)">первые 90 секунд</strong>,
+          и до 90% этой оценки основано на цвете.
+        </p>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.8">
+          Цветовосприятие культурно обусловлено: белый в Европе — символ чистоты,
+          в Азии — <strong style="color:var(--text)">траур</strong>. Красный на Западе — опасность, в Китае — <strong style="color:var(--text)">удача и праздник</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="psych-grid" id="psychGrid"></div>
+
+    <div class="pfacts">
+      <div class="pfact fi"><div class="pfact-num">93%</div><div class="pfact-text">покупателей ориентируются на внешний вид при выборе товара</div></div>
+      <div class="pfact fi d1"><div class="pfact-num">80%</div><div class="pfact-text">рост узнаваемости бренда при правильном цвете</div></div>
+      <div class="pfact fi d2"><div class="pfact-num">78%</div><div class="pfact-text">людей называют синий любимым цветом в деловом контексте</div></div>
+      <div class="pfact fi d3"><div class="pfact-num">15%</div><div class="pfact-text">рост конверсии — эффект от смены цвета кнопки (A/B тест)</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════
+     ЖИВОЙ МАКЕТ
+     ══════════════════════════ -->
+<section id="sandbox">
+  <div class="container">
+    <div class="chip fi">Инструмент №4</div>
+    <h2 class="st fi d1">Живой макет</h2>
+    <p class="sd fi d2">Выберите цветовую схему — макет сайта мгновенно перекрасится. Каждая схема создаёт своё настроение и воздействует на пользователя по-разному.</p>
+
+    <div class="sandbox-layout">
+      <div class="fi">
+        <div class="pal-label">Выберите цветовую схему</div>
+        <div class="pals" id="palList"></div>
+      </div>
+      <div class="fi d1">
+        <div class="browser">
+          <div class="b-chrome">
+            <div class="b-dots">
+              <div class="b-dot" style="background:#ff5f57"></div>
+              <div class="b-dot" style="background:#febc2e"></div>
+              <div class="b-dot" style="background:#28c840"></div>
+            </div>
+            <div class="b-bar">
+              <span class="b-lock">🔒</span>
+              <span class="b-url">mysite.ru</span>
+            </div>
+          </div>
+          <div class="mk-nav" id="mkNav">
+            <div class="mk-logo" id="mkLogo">Бренд</div>
+            <div class="mk-nls">
+              <div class="mk-nl" id="mkNl1"></div>
+              <div class="mk-nl" id="mkNl2"></div>
+              <div class="mk-nl" id="mkNl3"></div>
+            </div>
+          </div>
+          <div class="mk-hero" id="mkHero">
+            <div class="mk-chip" id="mkChip"></div>
+            <div class="mk-h1" id="mkH1">Заголовок страницы</div>
+            <div class="mk-lines">
+              <div class="mk-line" id="mkL1" style="width:100%"></div>
+              <div class="mk-line" id="mkL2" style="width:80%"></div>
+              <div class="mk-line" id="mkL3" style="width:55%"></div>
+            </div>
+            <div class="mk-cta" id="mkCta">Кнопка действия</div>
+          </div>
+          <div class="mk-cards" id="mkCards">
+            <div class="mk-card"><div class="mk-ct" id="mkC1"></div><div class="mk-cb"><div class="mk-cl"></div><div class="mk-cl"></div></div></div>
+            <div class="mk-card"><div class="mk-ct" id="mkC2"></div><div class="mk-cb"><div class="mk-cl"></div><div class="mk-cl"></div></div></div>
+            <div class="mk-card"><div class="mk-ct" id="mkC3"></div><div class="mk-cb"><div class="mk-cl"></div><div class="mk-cl"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════
+     ФУТЕР
+     ══════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><div class="footer-logo-dot"></div>Теория цвета</div>
+        <p>Интерактивный выпускной проект по теории цвета — фундаментальному разделу визуального искусства, дизайна и психологии восприятия.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Разделы</h4>
+        <ul>
+          <li><span>→ </span>Теория цвета</li>
+          <li><span>→ </span>Цветовой круг Иттена</li>
+          <li><span>→ </span>Цветовые гармонии</li>
+          <li><span>→ </span>Психология цвета</li>
+          <li><span>→ </span>Живой макет</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Источники</h4>
+        <ul>
+          <li>Иттен — <span>«Искусство цвета»</span></li>
+          <li>Гёте — <span>«Учение о цвете»</span></li>
+          <li>Кандинский — <span>«О духовном в искусстве»</span></li>
+          <li>Алберс — <span>«Взаимодействие цвета»</span></li>
+          <li>Оствальд — <span>Цветовой атлас</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-author">
+        <strong>Работу выполнил:</strong> ученик 11 «Б» класса школы №158<br>
+        <span class="gold">Сек Артём</span> · Выпускной проект · 2026
+      </div>
+      <div class="footer-spectrum" id="footerSpectrum"></div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// ══════════════════════════════════════════════════════
+// ДАННЫЕ: 12 цветов круга Иттена
+// ══════════════════════════════════════════════════════
+const COLORS=[
+  {name:'Красный',hex:'#FF3B30',temp:'Тёплый',desc:'Самый эмоционально насыщенный цвет. Повышает пульс, стимулирует аппетит и создаёт ощущение срочности. Активирует симпатическую нервную систему.',tags:['Страсть','Энергия','Опасность','Сила','Любовь'],uses:'Распродажи, спорт, предупреждения, фастфуд, кнопки CTA'},
+  {name:'Красно-оранжевый',hex:'#FF6B35',temp:'Тёплый',desc:'Сочетает интенсивность красного с дружелюбием оранжевого. Создаёт ощущение азарта и дружеской конкуренции.',tags:['Тепло','Активность','Приключение','Азарт'],uses:'Спортивные бренды, туризм, фуд-маркетинг'},
+  {name:'Оранжевый',hex:'#FF9500',temp:'Тёплый',desc:'Жизнерадостный цвет общения. Делает бренды доступными и дружелюбными, снижает психологический барьер покупки.',tags:['Радость','Дружелюбие','Доступность','Оптимизм'],uses:'Ретейл, CTA-кнопки, детские бренды, доставка еды'},
+  {name:'Жёлто-оранжевый',hex:'#FFCC02',temp:'Тёплый',desc:'Цвет золота и изобилия. Вызывает ощущение праздника, тепла и хорошего настроения. Символ достатка.',tags:['Золото','Богатство','Изобилие','Праздник'],uses:'Премиум-сегмент, ювелирные бренды, осенняя тематика'},
+  {name:'Жёлтый',hex:'#FFE500',temp:'Тёплый',desc:'Первый цвет, который замечает человеческий глаз. Стимулирует умственную деятельность и поднимает настроение.',tags:['Оптимизм','Интеллект','Внимание','Счастье','Свет'],uses:'Предупреждающие знаки, образование, такси, детские товары'},
+  {name:'Жёлто-зелёный',hex:'#A8D400',temp:'Нейтральный',desc:'Свежий и живой переходный оттенок. Вызывает ассоциации с весной, молодостью и новым началом, пробуждением.',tags:['Свежесть','Молодость','Рост','Весна'],uses:'Органические продукты, эко-бренды, спортивное питание'},
+  {name:'Зелёный',hex:'#30D158',temp:'Холодный',desc:'Цвет природы и равновесия. Снижает уровень кортизола (стресса), символизирует здоровье, рост и финансовый успех.',tags:['Природа','Гармония','Здоровье','Деньги','Безопасность'],uses:'Экология, финансы, медицина, органическая еда, аптеки'},
+  {name:'Сине-зелёный',hex:'#00C7BE',temp:'Холодный',desc:'Освежающий и чистый. Объединяет надёжность синего и жизненность зелёного. Один из самых популярных в цифровом дизайне.',tags:['Чистота','Ясность','Технологии','Освежение'],uses:'IT-продукты, косметика, SPA-бренды, медицинские сервисы'},
+  {name:'Синий',hex:'#007AFF',temp:'Холодный',desc:'Самый популярный цвет среди корпоративных брендов мира. Вызывает доверие, профессионализм и спокойствие.',tags:['Доверие','Стабильность','Интеллект','Спокойствие','Надёжность'],uses:'Банки, IT-компании, социальные сети, медицина, авиация'},
+  {name:'Сине-фиолетовый',hex:'#5E5CE6',temp:'Холодный',desc:'Таинственный и современный. Любимец технологических стартапов — сочетает надёжность синего и творчество фиолетового.',tags:['Мистика','Творчество','Инновации','Глубина'],uses:'Технологические стартапы, игровые бренды, духовные практики'},
+  {name:'Фиолетовый',hex:'#9B59B6',temp:'Холодный',desc:'Исторически — цвет королевской власти. Сегодня символизирует люкс, творчество и высокий статус. Редкий в природе.',tags:['Роскошь','Творчество','Мудрость','Власть','Магия'],uses:'Люкс-бренды, косметика, шоколад, парфюмерия, арт-проекты'},
+  {name:'Пурпурный',hex:'#FF2D55',temp:'Тёплый',desc:'Страстный и драматичный. Популярен в моде и развлечениях как символ чувственности, смелости и женской силы.',tags:['Страсть','Драма','Изысканность','Смелость'],uses:'Мода, косметика, ночная жизнь, развлекательная индустрия'}
+];
+
+// ══════════════════════════════════════════════════════
+// УТИЛИТЫ
+// ══════════════════════════════════════════════════════
+function sectorPath(i,n,ri,ro,gap){
+  const step=(2*Math.PI)/n;
+  const a1=i*step-Math.PI/2+gap/2;
+  const a2=a1+step-gap;
+  const la=step-gap>Math.PI?1:0;
+  return`M${Math.cos(a1)*ro} ${Math.sin(a1)*ro} A${ro} ${ro} 0 ${la} 1 ${Math.cos(a2)*ro} ${Math.sin(a2)*ro} L${Math.cos(a2)*ri} ${Math.sin(a2)*ri} A${ri} ${ri} 0 ${la} 0 ${Math.cos(a1)*ri} ${Math.sin(a1)*ri}Z`;
+}
+
+function hexRgb(h){return{r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)}}
+
+function drawWheel(svgEl,onClick){
+  svgEl.innerHTML='';
+  // Декоративные кольца фона
+  [.975,.91].forEach((r,ri)=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',0);c.setAttribute('cy',0);c.setAttribute('r',r);
+    c.setAttribute('fill','none');c.setAttribute('stroke',`rgba(255,255,255,${.04-ri*.01})`);c.setAttribute('stroke-width','.004');
+    svgEl.appendChild(c);
+  });
+  COLORS.forEach((col,i)=>{
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',sectorPath(i,12,.42,.94,.03));
+    p.setAttribute('fill',col.hex);
+    p.setAttribute('class','wheel-sector');
+    p.dataset.i=i;
+    if(onClick)p.addEventListener('click',()=>onClick(i));
+    svgEl.appendChild(p);
+  });
+  const bg=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  bg.setAttribute('cx',0);bg.setAttribute('cy',0);bg.setAttribute('r',.39);bg.setAttribute('fill','#07070d');
+  svgEl.appendChild(bg);
+  [[0,-.05,'Иттен','.09','rgba(255,255,255,.55)','800'],[0,.07,'12 цветов','.062','rgba(255,255,255,.25)','500']].forEach(([x,y,txt,sz,fill,w])=>{
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size',sz);t.setAttribute('fill',fill);t.setAttribute('font-family','Montserrat,sans-serif');t.setAttribute('font-weight',w);
+    t.textContent=txt;svgEl.appendChild(t);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// ЦВЕТОВОЙ КРУГ
+// ══════════════════════════════════════════════════════
+let activeIdx=null;
+function initWheel(){
+  const svg=document.getElementById('colorWheelSVG');
+  drawWheel(svg,idx=>{
+    if(activeIdx===idx){
+      activeIdx=null;
+      svg.querySelectorAll('.wheel-sector').forEach(s=>{s.style.opacity='';s.style.filter=''});
+      document.getElementById('cpPh').style.display='flex';
+      document.getElementById('cpDet').style.display='none';
+      return;
+    }
+    activeIdx=idx;
+    const comp=(idx+6)%12;
+    svg.querySelectorAll('.wheel-sector').forEach((s,i)=>{
+      s.style.filter='';
+      if(i===idx){s.style.opacity='1';s.style.filter=`brightness(1.4) drop-shadow(0 0 12px ${COLORS[i].hex})`}
+      else if(i===comp){s.style.opacity='1';s.style.filter=`brightness(1.15) drop-shadow(0 0 7px ${COLORS[i].hex})`}
+      else s.style.opacity='.14';
+    });
+    showColor(idx);
+  });
+}
+
+function showColor(idx){
+  const c=COLORS[idx],comp=COLORS[(idx+6)%12],rgb=hexRgb(c.hex);
+  document.getElementById('cpPh').style.display='none';
+  const det=document.getElementById('cpDet');
+  det.style.display='flex';det.style.flexDirection='column';
+  document.getElementById('cpBanner').style.background=`linear-gradient(135deg,${c.hex}dd,${c.hex})`;
+  document.getElementById('cpHex').textContent=c.hex;
+  const nm=document.getElementById('cpName');nm.textContent=c.name;nm.style.color=c.hex;
+  const tmp=document.getElementById('cpTemp');tmp.textContent=c.temp;
+  const iw=c.temp==='Тёплый',ic=c.temp==='Холодный';
+  tmp.style.color=iw?'#ff8c42':ic?'#47b8e0':'#a0a0b0';
+  tmp.style.borderColor=(iw?'#ff8c42':ic?'#47b8e0':'#a0a0b0')+'44';
+  tmp.style.background=(iw?'rgba(255,140,66,.08)':ic?'rgba(71,184,224,.08)':'rgba(160,160,176,.08)');
+  document.getElementById('cpDesc').textContent=c.desc;
+  const tg=document.getElementById('cpTags');tg.innerHTML='';
+  c.tags.forEach(t=>{const s=document.createElement('span');s.className='cp-tag';s.textContent=t;s.style.color=c.hex;s.style.borderColor=c.hex+'33';s.style.background=c.hex+'0d';tg.appendChild(s)});
+  document.getElementById('cpRv').textContent=rgb.r;
+  document.getElementById('cpGv').textContent=rgb.g;
+  document.getElementById('cpBv').textContent=rgb.b;
+  document.getElementById('cpRbar').style.width=Math.round(rgb.r/255*100)+'%';
+  document.getElementById('cpGbar').style.width=Math.round(rgb.g/255*100)+'%';
+  document.getElementById('cpBbar').style.width=Math.round(rgb.b/255*100)+'%';
+  document.getElementById('cpUses').textContent=c.uses;
+  document.getElementById('cpS1').style.background=c.hex;
+  document.getElementById('cpS2').style.background=comp.hex;
+  document.getElementById('cpCN').textContent=comp.name;
+  document.getElementById('cpCH').textContent=comp.hex;
+}
+
+// ══════════════════════════════════════════════════════
+// ГАРМОНИИ
+// ══════════════════════════════════════════════════════
+const HARMONIES=[
+  {id:'comp',icon:'◑',name:'Комплементарная',sub:'Два противоположных цвета (180°)',base:0,offsets:[0,6],
+   text:'<strong>Комплементарная гармония</strong> — два цвета напротив друг друга на круге. Создаёт максимальный контраст и визуальное напряжение. Идеально для акцентов, CTA-кнопок, рекламы.<br><br>📌 <strong>Пример:</strong> синий + оранжевый, красный + зелёный'},
+  {id:'split',icon:'⌥',name:'Сплит-комплементарная',sub:'Цвет + два соседних с его противоположным',base:0,offsets:[0,5,7],
+   text:'<strong>Сплит-комплементарная</strong> — мягкий вариант комплементарной. Один цвет плюс два соседних с его противоположностью. Высокий контраст, но менее агрессивно.<br><br>📌 <strong>Пример:</strong> красный + сине-зелёный + жёлто-зелёный'},
+  {id:'triad',icon:'△',name:'Триадная',sub:'Три равноудалённых цвета (120°)',base:0,offsets:[0,4,8],
+   text:'<strong>Триадная гармония</strong> — три цвета через 120° по кругу. Яркая и разнообразная схема. Один цвет доминирует, два выступают акцентами. Динамична, но сбалансирована.<br><br>📌 <strong>Пример:</strong> красный + жёлтый + синий (первичная триада)'},
+  {id:'analog',icon:'〜',name:'Аналоговая',sub:'Три соседних цвета на круге',base:8,offsets:[0,1,2],
+   text:'<strong>Аналоговая гармония</strong> — три цвета рядом на круге. Создаёт покой, единство и природное ощущение. Мягко, без контраста. Часто встречается в природе.<br><br>📌 <strong>Пример:</strong> синий + сине-зелёный + зелёный'},
+  {id:'square',icon:'□',name:'Квадратная (тетрадная)',sub:'Четыре цвета через равные промежутки',base:0,offsets:[0,3,6,9],
+   text:'<strong>Квадратная гармония</strong> — четыре цвета через 90°. Очень богатая палитра. Сложна в применении — нужно грамотно управлять доминантным цветом, иначе получается хаос.<br><br>📌 <strong>Пример:</strong> красный + оранжевый + зелёный + синий'},
+];
+let activeH=null;
+function initHarmony(){
+  const svg=document.getElementById('harmonyWheelSVG');
+  drawWheel(svg,null);
+  const btns=document.getElementById('harmonyBtns');
+  HARMONIES.forEach(h=>{
+    const btn=document.createElement('button');
+    btn.className='hbtn';
+    btn.innerHTML=`<div class="hbtn-icon">${h.icon}</div><div class="hbtn-body"><div class="hbtn-name">${h.name}</div><div class="hbtn-sub">${h.sub}</div></div><span class="hbtn-arr">›</span>`;
+    btn.addEventListener('click',()=>{
+      btns.querySelectorAll('.hbtn').forEach(b=>b.classList.remove('on'));
+      if(activeH===h.id){activeH=null;resetHW();document.getElementById('harmonyExp').classList.remove('v');document.getElementById('harmonyColors').innerHTML='';return}
+      activeH=h.id;btn.classList.add('on');applyH(h);
+    });
+    btns.appendChild(btn);
+  });
+}
+function applyH(h){
+  const svg=document.getElementById('harmonyWheelSVG');
+  const active=h.offsets.map(o=>(h.base+o)%12);
+  svg.querySelectorAll('.wheel-sector').forEach((s,i)=>{
+    s.style.opacity='';s.style.filter='';
+    if(active.includes(i)){s.style.opacity='1';s.style.filter=`brightness(1.5) drop-shadow(0 0 10px ${COLORS[i].hex}) drop-shadow(0 0 20px ${COLORS[i].hex}55)`}
+    else s.style.opacity='.11';
+  });
+  const exp=document.getElementById('harmonyExp');exp.innerHTML=h.text;exp.classList.add('v');
+  const cc=document.getElementById('harmonyColors');cc.innerHTML='';
+  active.forEach(i=>{
+    const ch=document.createElement('div');ch.className='hchip';
+    ch.innerHTML=`<div class="hcdot" style="background:${COLORS[i].hex}"></div>${COLORS[i].name}`;
+    cc.appendChild(ch);
+  });
+}
+function resetHW(){
+  document.getElementById('harmonyWheelSVG').querySelectorAll('.wheel-sector').forEach(s=>{s.style.opacity='';s.style.filter=''});
+}
+
+// ══════════════════════════════════════════════════════
+// ПСИХОЛОГИЯ — карточки с SVG-иконками брендов
+// brandImgs — встроенные SVG, работают без интернета
+// ══════════════════════════════════════════════════════
+const BRAND_SVG = {
+  // ── КРАСНЫЙ ──
+  'coca-cola': `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#F40009"/><text x="22" y="17" text-anchor="middle" font-size="6.5" fill="#fff" font-family="serif" font-style="italic" font-weight="bold">Coca-</text><text x="22" y="26" text-anchor="middle" font-size="6.5" fill="#fff" font-family="serif" font-style="italic" font-weight="bold">Cola</text><path d="M10 30 Q22 27 34 30" stroke="#fff" stroke-width="1" fill="none" opacity=".5"/></svg>`,
+  'netflix':   `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#141414"/><path d="M13 10 L13 34 L18 34 L18 24 L26 34 L31 34 L31 10 L26 10 L26 20 L18 10 Z" fill="#E50914"/></svg>`,
+  'youtube':   `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#FF0000"/><rect x="9" y="14" width="26" height="16" rx="4" fill="#fff"/><polygon points="19,18 19,26 28,22" fill="#FF0000"/></svg>`,
+  'ferrari':   `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#CE1126"/><rect x="14" y="10" width="16" height="24" rx="2" fill="#FFD700"/><text x="22" y="26" text-anchor="middle" font-size="8" fill="#CE1126" font-weight="900" font-family="sans-serif">SF</text></svg>`,
+  // ── СИНИЙ ──
+  'samsung':   `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#1428A0"/><text x="22" y="26" text-anchor="middle" font-size="8" fill="#fff" font-weight="700" font-family="sans-serif">SAMSUNG</text></svg>`,
+  'ford':      `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#003478"/><ellipse cx="22" cy="22" rx="16" ry="11" fill="none" stroke="#fff" stroke-width="2"/><text x="22" y="26" text-anchor="middle" font-size="9" fill="#fff" font-style="italic" font-weight="700" font-family="serif">Ford</text></svg>`,
+  'facebook':  `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#1877F2"/><text x="22" y="29" text-anchor="middle" font-size="22" fill="#fff" font-weight="900" font-family="sans-serif">f</text></svg>`,
+  'visa':      `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#1A1F71"/><text x="22" y="28" text-anchor="middle" font-size="13" fill="#fff" font-weight="900" font-family="sans-serif" letter-spacing="1">VISA</text></svg>`,
+  // ── ЖЁЛТЫЙ ──
+  'ikea':      `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#0058A3"/><rect x="7" y="16" width="30" height="12" rx="2" fill="#FFD700"/><text x="22" y="26" text-anchor="middle" font-size="10" fill="#0058A3" font-weight="900" font-family="sans-serif">IKEA</text></svg>`,
+  'mcdonalds': `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#FFC72C"/><text x="22" y="32" text-anchor="middle" font-size="28" fill="#DA291C" font-weight="900" font-family="sans-serif">M</text></svg>`,
+  'snapchat':  `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#FFFC00"/><path d="M22 10 C16 10 12 14 12 19 C12 22 13 24 14 26 C13 26.5 11 27 11 28.5 C11 29.5 12 30 13.5 30 C14 30 15 30 16 29.5 C17 31 18.5 32 22 33 C25.5 32 27 31 28 29.5 C29 30 30 30 30.5 30 C32 30 33 29.5 33 28.5 C33 27 31 26.5 30 26 C31 24 32 22 32 19 C32 14 28 10 22 10Z" fill="#333"/></svg>`,
+  'lego':      `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#FFD700"/><rect x="8" y="14" width="28" height="16" rx="3" fill="#E3000B"/><text x="22" y="26" text-anchor="middle" font-size="9" fill="#FFD700" font-weight="900" font-family="sans-serif">LEGO</text></svg>`,
+  // ── ЗЕЛЁНЫЙ ──
+  'starbucks': `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#00704A"/><circle cx="22" cy="22" r="13" fill="none" stroke="#fff" stroke-width="1.5"/><text x="22" y="26" text-anchor="middle" font-size="7.5" fill="#fff" font-weight="700" font-family="sans-serif">STARBUCKS</text></svg>`,
+  'spotify':   `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#1DB954"/><circle cx="22" cy="22" r="13" fill="#1DB954" stroke="#000" stroke-width=".5"/><path d="M13 18 Q22 15 31 18" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M14 22 Q22 19 30 22" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M15 26 Q22 23 29 26" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`,
+  'wholefoods':`<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#00674B"/><circle cx="22" cy="20" r="10" fill="#fff" opacity=".15"/><text x="22" y="23" text-anchor="middle" font-size="6" fill="#fff" font-weight="700" font-family="sans-serif">WHOLE</text><text x="22" y="31" text-anchor="middle" font-size="6" fill="#fff" font-weight="700" font-family="sans-serif">FOODS</text></svg>`,
+  'bp':        `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#009B4E"/><circle cx="22" cy="22" r="13" fill="#FFD700"/><circle cx="22" cy="22" r="9" fill="#009B4E"/><text x="22" y="26" text-anchor="middle" font-size="10" fill="#fff" font-weight="900" font-family="sans-serif">bp</text></svg>`,
+  // ── ФИОЛЕТОВЫЙ ──
+  'cadbury':   `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#4A154B"/><text x="22" y="21" text-anchor="middle" font-size="6" fill="#fff" font-weight="700" font-family="sans-serif">Cadbury</text><rect x="10" y="24" width="24" height="8" rx="2" fill="#7B3F8B"/><text x="22" y="30.5" text-anchor="middle" font-size="5" fill="#fff" font-family="sans-serif">CHOCOLATE</text></svg>`,
+  'hallmark':  `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#7B2D8B"/><polygon points="22,9 25,17 34,17 27,22 30,30 22,25 14,30 17,22 10,17 19,17" fill="#FFD700"/></svg>`,
+  'milka':     `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#7B52AB"/><text x="22" y="27" text-anchor="middle" font-size="12" fill="#fff" font-style="italic" font-weight="700" font-family="serif">milka</text></svg>`,
+  'twitch':    `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#9146FF"/><path d="M13 10 L13 30 L19 30 L19 34 L23 30 L29 30 L35 24 L35 10 Z" fill="#fff"/><rect x="19" y="15" width="3" height="8" rx="1" fill="#9146FF"/><rect x="25" y="15" width="3" height="8" rx="1" fill="#9146FF"/></svg>`,
+  // ── ОРАНЖЕВЫЙ ──
+  'amazon':    `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#FF9900"/><text x="22" y="21" text-anchor="middle" font-size="8.5" fill="#131921" font-weight="900" font-family="sans-serif">amazon</text><path d="M12 27 Q22 32 32 27" stroke="#131921" stroke-width="2" fill="none" stroke-linecap="round"/><polygon points="32,25 35,27 32,29" fill="#131921"/></svg>`,
+  'fanta':     `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#F7941D"/><circle cx="22" cy="22" r="12" fill="#fff" opacity=".2"/><text x="22" y="27" text-anchor="middle" font-size="11" fill="#fff" font-weight="900" font-style="italic" font-family="sans-serif">Fanta</text></svg>`,
+  'harley':    `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#FF6600"/><rect x="9" y="14" width="26" height="16" rx="2" fill="#1a1a1a"/><text x="22" y="23" text-anchor="middle" font-size="5.5" fill="#FF6600" font-weight="900" font-family="sans-serif">HARLEY</text><text x="22" y="29" text-anchor="middle" font-size="5" fill="#FF6600" font-weight="700" font-family="sans-serif">DAVIDSON</text></svg>`,
+  'duolingo':  `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="10" fill="#58CC02"/><circle cx="22" cy="21" r="12" fill="#fff"/><ellipse cx="18" cy="18" rx="2.5" ry="3" fill="#333"/><ellipse cx="26" cy="18" rx="2.5" ry="3" fill="#333"/><path d="M17 25 Q22 29 27 25" stroke="#333" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="22" cy="12" rx="8" ry="5" fill="#58CC02"/><ellipse cx="15" cy="13" rx="3" ry="4" fill="#58CC02"/><ellipse cx="29" cy="13" rx="3" ry="4" fill="#58CC02"/></svg>`,
+};
+
+const PSYCH=[
+  {
+    name:'Красный',hex:'#FF3B30',emoji:'❤️‍🔥',
+    tagline:'Страсть и энергия',
+    desc:'Стимулирует нервную систему и создаёт ощущение срочности. Цвет действия, силы и желания.',
+    tags:['Любовь','Опасность','Сила','Страсть'],
+    brandImgs:[
+      {key:'coca-cola', label:'Coca-Cola'},
+      {key:'netflix',   label:'Netflix'},
+      {key:'youtube',   label:'YouTube'},
+      {key:'ferrari',   label:'Ferrari'},
+    ]
+  },
+  {
+    name:'Синий',hex:'#007AFF',emoji:'🔵',
+    tagline:'Доверие и профессионализм',
+    desc:'Самый популярный корпоративный цвет. Создаёт надёжность и компетентность.',
+    tags:['Доверие','Стабильность','Лояльность','Ясность'],
+    brandImgs:[
+      {key:'samsung',  label:'Samsung'},
+      {key:'ford',     label:'Ford'},
+      {key:'facebook', label:'Facebook'},
+      {key:'visa',     label:'Visa'},
+    ]
+  },
+  {
+    name:'Жёлтый',hex:'#FFE500',emoji:'☀️',
+    tagline:'Оптимизм и внимание',
+    desc:'Первый цвет, который замечает глаз. Стимулирует умственную активность.',
+    tags:['Радость','Тепло','Внимание','Энергия'],
+    brandImgs:[
+      {key:'ikea',      label:'IKEA'},
+      {key:'mcdonalds', label:"McDonald's"},
+      {key:'snapchat',  label:'Snapchat'},
+      {key:'lego',      label:'LEGO'},
+    ]
+  },
+  {
+    name:'Зелёный',hex:'#30D158',emoji:'🌿',
+    tagline:'Природа и баланс',
+    desc:'Снижает стресс, символизирует здоровье, рост и финансовый успех.',
+    tags:['Здоровье','Экология','Рост','Деньги'],
+    brandImgs:[
+      {key:'starbucks',  label:'Starbucks'},
+      {key:'spotify',    label:'Spotify'},
+      {key:'wholefoods', label:'Whole Foods'},
+      {key:'bp',         label:'BP'},
+    ]
+  },
+  {
+    name:'Фиолетовый',hex:'#9B59B6',emoji:'💜',
+    tagline:'Роскошь и творчество',
+    desc:'Цвет королей. Ассоциируется с премиальностью, мудростью и вдохновением.',
+    tags:['Роскошь','Мудрость','Магия','Тайна'],
+    brandImgs:[
+      {key:'cadbury',  label:'Cadbury'},
+      {key:'hallmark', label:'Hallmark'},
+      {key:'milka',    label:'Milka'},
+      {key:'twitch',   label:'Twitch'},
+    ]
+  },
+  {
+    name:'Оранжевый',hex:'#FF9500',emoji:'🟠',
+    tagline:'Энтузиазм и доступность',
+    desc:'Тёплый и дружелюбный. Делает бренды доступными, стимулирует импульсивность.',
+    tags:['Дружелюбие','Оптимизм','Доступность','Веселье'],
+    brandImgs:[
+      {key:'amazon',   label:'Amazon'},
+      {key:'fanta',    label:'Fanta'},
+      {key:'harley',   label:'Harley'},
+      {key:'duolingo', label:'Duolingo'},
+    ]
+  },
+];
+
+function initPsych(){
+  const g=document.getElementById('psychGrid');
+  PSYCH.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='pcard fi'+(i%3===1?' d1':i%3===2?' d2':'');
+
+    // Строим блок брендов через встроенные SVG
+    const brandsHtml = c.brandImgs.map(b=>`
+      <div class="brand-img-wrap">
+        <div class="brand-img">${BRAND_SVG[b.key]||''}</div>
+        <span class="brand-img-label">${b.label}</span>
+      </div>`).join('');
+
+    el.innerHTML=`
+      <div class="pcard-top" style="background:linear-gradient(135deg,${c.hex}cc,${c.hex})">
+        <div class="pcard-emoji">${c.emoji}</div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name" style="color:${c.hex}">${c.name}</div>
+        <div class="pcard-tagline">${c.tagline}</div>
+        <div class="pcard-desc">${c.desc}</div>
+        <div class="pcard-tags">${c.tags.map(t=>`<span class="pcard-tag">${t}</span>`).join('')}</div>
+        <div class="pcard-brands-imgs">${brandsHtml}</div>
+      </div>`;
+
+    el.addEventListener('mouseenter',()=>{el.style.borderColor=c.hex+'55';el.style.boxShadow=`0 24px 70px ${c.hex}22`});
+    el.addEventListener('mouseleave',()=>{el.style.borderColor='';el.style.boxShadow=''});
+    g.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// ЖИВОЙ МАКЕТ
+// ══════════════════════════════════════════════════════
+const PALS=[
+  {name:'Океанский бриз',mood:'Доверие и профессионализм',sw:['#007AFF','#e8f4ff','#1a1a2e'],a:'#007AFF',bg:'#f0f8ff',bg2:'#e8f4ff',t:'#1a1a2e'},
+  {name:'Золотой закат',mood:'Тепло и энергия',sw:['#FF9500','#fff8f0','#2d1a00'],a:'#FF9500',bg:'#fffcf5',bg2:'#fff3e0',t:'#2d1a00'},
+  {name:'Весенний луг',mood:'Природа и свежесть',sw:['#30D158','#f0fff4','#0d2818'],a:'#30D158',bg:'#f7fffa',bg2:'#e8f8ed',t:'#0d2818'},
+  {name:'Фиолетовая ночь',mood:'Роскошь и тайна',sw:['#9B59B6','#f8f0ff','#1a0a2e'],a:'#9B59B6',bg:'#faf5ff',bg2:'#f0e6ff',t:'#1a0a2e'},
+  {name:'Коралловый',mood:'Яркость и страсть',sw:['#FF3B30','#fff5f5','#2d0a0a'],a:'#FF3B30',bg:'#fff8f8',bg2:'#ffe6e6',t:'#2d0a0a'},
+  {name:'Монохромный',mood:'Минимализм и элегантность',sw:['#1c1c1e','#f5f5f7','#888'],a:'#1c1c1e',bg:'#ffffff',bg2:'#f5f5f7',t:'#1c1c1e'},
+];
+function applyPal(p){
+  const s=(id,prop,val)=>{const e=document.getElementById(id);if(e)e.style[prop]=val};
+  s('mkNav','background',p.bg2);s('mkNav','borderBottomColor',p.a+'22');
+  s('mkLogo','color',p.a);
+  ['mkNl1','mkNl2','mkNl3'].forEach(id=>s(id,'background',p.t));
+  s('mkHero','background',p.bg);s('mkChip','background',p.a+'55');s('mkH1','color',p.t);
+  ['mkL1','mkL2','mkL3'].forEach(id=>s(id,'background',p.t));
+  const cta=document.getElementById('mkCta');
+  if(cta){cta.style.background=p.a;cta.style.color=p.bg;cta.style.boxShadow=`0 4px 20px ${p.a}55`}
+  s('mkCards','background',p.bg2);
+  [[p.a,'dd'],[p.a,'88'],[p.a,'44']].forEach(([c,al],i)=>s(`mkC${i+1}`,'background',c+al));
+}
+function initSandbox(){
+  const list=document.getElementById('palList');
+  PALS.forEach((pal,i)=>{
+    const el=document.createElement('div');
+    el.className='pal'+(i===0?' on':'');
+    el.innerHTML=`<div class="pal-sw">${pal.sw.map(c=>`<div class="pal-s" style="background:${c}"></div>`).join('')}</div><div class="pal-info"><div class="pal-name">${pal.name}</div><div class="pal-mood">${pal.mood}</div></div><div class="pal-chk">✓</div>`;
+    el.addEventListener('click',()=>{list.querySelectorAll('.pal').forEach(e=>e.classList.remove('on'));el.classList.add('on');applyPal(pal)});
+    list.appendChild(el);
+  });
+  applyPal(PALS[0]);
+}
+
+// ══════════════════════════════════════════════════════
+// ФУТЕР — радужная полоска
+// ══════════════════════════════════════════════════════
+function initFooter(){
+  const sp=document.getElementById('footerSpectrum');
+  COLORS.forEach(c=>{const s=document.createElement('span');s.style.background=c.hex;sp.appendChild(s)});
+}
+
+// ══════════════════════════════════════════════════════
+// АНИМАЦИИ ПРИ СКРОЛЛЕ
+// ══════════════════════════════════════════════════════
+function initAnim(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')});
+  },{threshold:.07,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+}
+
+// ══════════════════════════════════════════════════════
+// СТАРТ
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  initWheel();
+  initHarmony();
+  initPsych();
+  initSandbox();
+  initFooter();
+  initAnim();
+});
+</script>
+</body>
+</html>
